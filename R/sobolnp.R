@@ -15,6 +15,11 @@ sobolnp <- function(Y,
   #bootstrap: logical if apply bootstrap or not
   #ckerorder: Kernel order for the nonparametric estimator
   #MAIN
+
+  if (!requireNamespace("np", quietly = TRUE)) {
+    stop("Please install the package np: install.packages('np')")
+  }#end-require-np
+
   ANS = list()
   ANS[['call']] = match.call()
   ANS[['X']] = X
@@ -76,7 +81,7 @@ optNP <- function (Y, X, nboot, bootstrap, ckerorder) {
     ghat_boot <- lapply(
       X = Y_boot,
       FUN = function(ydat, xdat, h, ckerorder) {
-        ghat.bw <- npregbw(
+        ghat.bw <- np::npregbw(
           xdat = xdat,
           ydat = ydat,
           bws = h,
@@ -85,7 +90,7 @@ optNP <- function (Y, X, nboot, bootstrap, ckerorder) {
           ckerorder = ckerorder,
           bwmethod = "cv.ls"
         )
-        ghat <- npreg(ghat.bw)
+        ghat <- np::npreg(ghat.bw)
         return(mean = ghat$mean)
       },
       #end-function-ghat_boot
@@ -121,13 +126,13 @@ optNP <- function (Y, X, nboot, bootstrap, ckerorder) {
              ckerorder) {
       Y <- Ydat
       X <- Xdat
-      ghat.bw <- npregbw(
+      ghat.bw <- np::npregbw(
         xdat = X[, i],
         ydat = Y[, i],
         ckertype = "epanechnikov",
         bwmethod = "cv.ls"
       )
-      ghat <- npreg(ghat.bw, residuals = TRUE)
+      ghat <- np::npreg(ghat.bw, residuals = TRUE)
       if (!bootstrap) {
         return(list(
           mean = ghat$mean,
@@ -137,7 +142,7 @@ optNP <- function (Y, X, nboot, bootstrap, ckerorder) {
         ))
       } #end-if-!bootstrap
       else if (bootstrap) {
-        resid.np <- npreg(npregbw(
+        resid.np <- np::npreg(np::npregbw(
           xdat = X[, i],
           ydat = residuals(ghat),
           ckertype = "epanechnikov"
@@ -192,7 +197,7 @@ optNP <- function (Y, X, nboot, bootstrap, ckerorder) {
 
   nc <-  min(ncol(Y), parallel::detectCores())
 
-  ANS <- try(pbmcapply::pbmclapply(
+  ANS <- try(parallel::mclapply(
     X = 1:ncol(Y),
     FUN = estimation_mean_and_bws,
     Ydat = Y,
