@@ -6,6 +6,7 @@
 sobolnp <- function(Y,
                     X,
                     nboot = 100,
+                    total.indices = FALSE,
                     bootstrap = FALSE,
                     ckerorder = 2) {
   #Arguments:
@@ -34,17 +35,21 @@ sobolnp <- function(Y,
     par.names = paste0('X', 1:ncol(X))
   # X = normalize(X)    		#normalize inpiuts between [0,1]
   #Y = Y - mean(Y)     		#center model responses
-  Y = sapply(1:ncol(X), function(i)
-    return(Y[order(X[, i])]))    #order Y before X (or create a new variable for X)
-  X = sapply(1:ncol(X), function(i)
-    return(X[order(X[, i]), i]))
-  NP = optNP(Y,
-             X,
-             nboot = nboot,
-             bootstrap = bootstrap,
-             ckerorder = ckerorder)
-  SA.tab = t(sapply(NP, est.Si))
-  colnames(SA.tab) = c('Si', 'bw' , 'se', 'q0.05')
+  # Y = sapply(1:ncol(X), function(i)
+  #   return(Y[order(X[, i])]))    #order Y before X (or create a new variable for X)
+  # X = sapply(1:ncol(X), function(i)
+  #   return(X[order(X[, i]), i]))
+  NP <- optNP(
+    Y,
+    X,
+    total.indices,
+    nboot = nboot,
+    bootstrap = bootstrap,
+    ckerorder = ckerorder
+  )
+  SA.tab <- t(sapply(NP, est.Si))
+  colnames(SA.tab) <-
+    c('Si', 'bw' , 'STi', paste0('bwT', 1:(ncol(X) - 1)))
   rownames(SA.tab) = par.names
   ANS[['S']] = SA.tab
   class(ANS) = 'sobolnp'
@@ -53,18 +58,27 @@ sobolnp <- function(Y,
 
 est.Si <- function (NP) {
   gi <- NP[['mean']]
-  yi <- NP[['y']]
+  gTi <- NP[['mean.Total']]
   bw <- NP[['bws']]
-  Si = var(gi) / var(yi)
-  #calculates the standard error of the main effect estimates
-  yi.sc = (yi - mean(yi)) / sd(yi)            	#scaled yi
-  u = (yi - gi) / (sd(yi) * abs(1 - Si) ** 0.5)   #scales residuals
-  Si.se = abs(1 - Si) * sd(yi.sc ** 2 - u ** 2) / length(yi) ** 0.5
-  q0.05 = qnorm(0.05, Si, Si.se)
-  return(c(Si, bw, Si.se, q0.05))
+  bwTi <- NP[['bws.Total']]
+  yi <- NP[['y']]
+  Si <- var(gi) / var(yi)
+  STi <- 1 - var(gTi) / var(yi)
+  # #calculates the standard error of the main effect estimates
+  # yi.sc = (yi - mean(yi)) / sd(yi)            	#scaled yi
+  # u = (yi - gi) / (sd(yi) * abs(1 - Si) ** 0.5)   #scales residuals
+  # Si.se = abs(1 - Si) * sd(yi.sc ** 2 - u ** 2) / length(yi) ** 0.5
+  # q0.05 = qnorm(0.05, Si, Si.se)
+  return(c(Si, bw, STi, bwTi))
 }
 
-optNP <- function (Y, X, nboot, bootstrap, ckerorder) {
+optNP <- function (Y,
+                   X,
+                   total.indices,
+                   nboot,
+                   bootstrap,
+                   ckerorder) {
+
   #DOC
   #Estimates nonparametrically the regression curve across all the column of the
   #matrix Y.
@@ -121,6 +135,7 @@ optNP <- function (Y, X, nboot, bootstrap, ckerorder) {
     function(i,
              Ydat,
              Xdat,
+             total.indices,
              nboot,
              bootstrap,
              ckerorder) {
@@ -128,18 +143,43 @@ optNP <- function (Y, X, nboot, bootstrap, ckerorder) {
       X <- Xdat
       ghat.bw <- np::npregbw(
         xdat = X[, i],
-        ydat = Y[, i],
+        ydat = Y,
         ckertype = "epanechnikov",
         bwmethod = "cv.ls"
       )
       ghat <- np::npreg(ghat.bw, residuals = TRUE)
+
+      if (total.indices == TRUE) {
+        ghat.bw.Total <- np::npregbw(
+          xdat = X[, -i],
+          ydat = Y,
+          ckertype = "epanechnikov",
+          bwmethod = "cv.ls"
+        )
+        ghat.Total <- np::npreg(ghat.bw.Total, residuals = TRUE)
+      }
+
+
       if (!bootstrap) {
-        return(list(
-          mean = ghat$mean,
-          bws = ghat$bw,
-          x = X[, i],
-          y = Y[, i]
-        ))
+        if (total.indices == TRUE) {
+          return(
+            list(
+              mean = ghat$mean,
+              bws = ghat$bw,
+              mean.Total = ghat.Total$mean,
+              bws.Total = ghat.Total$bw,
+              x = X[, i],
+              y = Y
+            )
+          )
+        } else{
+          return(list(
+            mean = ghat$mean,
+            bws = ghat$bw,
+            x = X[, i],
+            y = Y
+          ))
+        }
       } #end-if-!bootstrap
       else if (bootstrap) {
         resid.np <- np::npreg(np::npregbw(
@@ -170,7 +210,7 @@ optNP <- function (Y, X, nboot, bootstrap, ckerorder) {
           f = objective,
           interval = c(0,  2 * ghat$bw),
           Y_boot = Y_boot,
-          Y = Y[, i],
+          Y = Y,
           Xi = X[, i],
           ckerorder = ckerorder
         )
@@ -189,7 +229,7 @@ optNP <- function (Y, X, nboot, bootstrap, ckerorder) {
           mean = g_boot_min_value,
           bws = h_boot_min,
           x = X[, i],
-          y = Y[, i]
+          y = Y
         ))
 
       } #end-if-bootstrap
@@ -198,10 +238,11 @@ optNP <- function (Y, X, nboot, bootstrap, ckerorder) {
   nc <-  min(ncol(Y), parallel::detectCores())
 
   ANS <- try(parallel::mclapply(
-    X = 1:ncol(Y),
+    X = 1:ncol(X),
     FUN = estimation_mean_and_bws,
     Ydat = Y,
     Xdat = X,
+    total.indices,
     nboot = nboot,
     bootstrap = bootstrap,
     ckerorder = ckerorder,
@@ -212,10 +253,11 @@ optNP <- function (Y, X, nboot, bootstrap, ckerorder) {
   if (is(ANS, 'try-error')) {
     #Windows does not support mclapply...
     NP <- lapply(
-      X = 1:ncol(Y),
+      X = 1:ncol(X),
       FUN = estimation_mean_and_bws,
       Ydat = Y,
       Xdat = X,
+      total.indices,
       nboot = nboot,
       bootstrap = bootstrap,
       ckerorder = ckerorder
