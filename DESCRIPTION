@@ -1,11 +1,15 @@
 Package: sobolnp
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Nonparametric Sobol estimator with bootstrap bandwidth
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author@R: person("Maikol", "Solís", ,"maikol.solis@ucr.ac.cr", c("aut", "cre"), comment = c(ORCID = "0000-0002-8776-6142"))
+Author: Maikol Solís <https://orcid.org/0000-0002-8776-6142>
+Maintainer: Maikol Solís <maikol.solis@ucr.ac.cr>
+Description: This package estimate the sobol indices using a non-parametric fit of the regression curve. The bandwidth is estimated using bootstrap to reduce the bias.   
+License: MIT + file LICENSE
+URL: https://github.com/maikol-solis/sobolnp/
+BugReports: https://github.com/maikol-solis/sobolnp/issues
+Imports: np, minqa, pbmcapply
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.1.1
