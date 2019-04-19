@@ -1,5 +1,8 @@
-#' Nonparametric Sobol estimator with bootstrap bandwidth
+#' Nonparametric Sobol Estimator with Bootstrap Bandwidth
 #'
+#' Algorithm to estimate the Sobol indices using a non-parametric
+#' fit of the regression curve. The bandwidth is estimated using
+#' bootstrap to reduce the finite-sample bias.
 #'
 #' @param Y Response continuous variable
 #' @param X Matrix of independent variables

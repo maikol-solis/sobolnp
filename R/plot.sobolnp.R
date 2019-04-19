@@ -1,4 +1,4 @@
-#' Plot function for class \code{sobolnp}
+#' Plot method for objects \code{sobolnp}
 #'
 #' Plot the Sobol indices based in a non-parametric regression
 #' with cross-validation and bootstrap bandwidth
@@ -6,8 +6,9 @@
 #' @param x an object of class \code{sobolnp}
 #' @param ... further arguments passed to the \code{plot} function
 #'
-#' @return Plot with Sobol indices
-#'
+#' @return
+#' A formatted table with the results of the \code{\link{sobolnp}}
+#' function.
 #' @export
 #'
 #' @examples

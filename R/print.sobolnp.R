@@ -1,10 +1,11 @@
-#' Title
+#' Print method for objects \code{sobolnp}
 #'
 #' @param x an object of class \code{sobolnp}
 #' @param ... further arguments passed to the \code{print} function
 #'
 #' @return
-#' A formatted
+#' A formatted table with the results of the \code{\link{sobolnp}}
+#' function.
 #' @export
 #'
 #' @examples
