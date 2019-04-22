@@ -3,19 +3,20 @@
 \name{plot}
 \alias{plot}
 \alias{plot.sobolnp}
-\title{Plot function for class \code{sobolnp}}
+\title{Plot method for objects \code{sobolnp}}
 \usage{
-plot(x, ...)
+plot(snp, ...)
 
-\method{plot}{sobolnp}(x, ...)
+\method{plot}{sobolnp}(snp, ...)
 }
 \arguments{
-\item{x}{an object of class \code{sobolnp}}
+\item{snp}{an object of class \code{sobolnp}}
 
 \item{...}{further arguments passed to the \code{plot} function}
 }
 \value{
-Plot with Sobol indices
+A formatted table with the results of the \code{\link{sobolnp}}
+function.
 }
 \description{
 Plot the Sobol indices based in a non-parametric regression
@@ -30,8 +31,8 @@ B <- 0.1
 sin(X[, 1]) + A * sin(X[, 2])^2 + B * X[, 3]^4 * sin(X[, 1])
 }
 
-X<- matrix(runif(3*10, -pi,pi), ncol = 3)
-Y<- ishigami.fun(X)
+X <- matrix(runif(3*1000, -pi,pi), ncol = 3)
+Y <- ishigami.fun(X)
 
 estimation <- sobolnp::sobolnp(Y = Y,X = X, mc.cores = 1)
 

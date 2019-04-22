@@ -2,7 +2,7 @@
 % Please edit documentation in R/sobolnp.R
 \name{sobolnp}
 \alias{sobolnp}
-\title{Nonparametric Sobol estimator with bootstrap bandwidth}
+\title{Nonparametric Sobol Estimator with Bootstrap Bandwidth}
 \usage{
 sobolnp(Y, X, bandwidth = NULL, bandwidth.compute = TRUE,
   bootstrap = TRUE, nboot = 100, ckerorder = 2, mc.cores = 1)
@@ -38,7 +38,9 @@ A list of class \code{sobolnp} with the following elements:
 }
 }
 \description{
-Nonparametric Sobol estimator with bootstrap bandwidth
+Algorithm to estimate the Sobol indices using a non-parametric
+fit of the regression curve. The bandwidth is estimated using
+bootstrap to reduce the finite-sample bias.
 }
 \examples{
 ishigami.fun <- function(X) {
