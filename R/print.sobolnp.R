@@ -1,6 +1,6 @@
 #' Print method for objects \code{sobolnp}
 #'
-#' @param x an object of class \code{sobolnp}
+#' @param snp an object of class \code{sobolnp}
 #' @param ... further arguments passed to the \code{print} function
 #'
 #' @return
@@ -17,8 +17,8 @@
 #' sin(X[, 1]) + A * sin(X[, 2])^2 + B * X[, 3]^4 * sin(X[, 1])
 #' }
 #'
-#' X<- matrix(runif(3*10, -pi,pi), ncol = 3)
-#' Y<- ishigami.fun(X)
+#' X <- matrix(runif(3*1000, -pi,pi), ncol = 3)
+#' Y <- ishigami.fun(X)
 #'
 #' estimation <- sobolnp::sobolnp(Y = Y,X = X, mc.cores = 1)
 #'
@@ -26,20 +26,20 @@
 #' }
 #'
 
-print <- function(x,...){
-  UseMethod("print", x)
+print <- function(snp,...){
+  UseMethod("print", snp)
 }
 
 #' @export
 #' @rdname print
-print.sobolnp <- function(x, ...) {
-  cat("\nCall:\n", deparse(x[["call"]]), "\n", sep = "")
-  cat("\nNumber of observations:", x[["num.obs"]], "\n")
-  cat("\nNumber of variables:", x[["num.var"]], "\n")
+print.sobolnp <- function(snp, ...) {
+  cat("\nCall:\n", deparse(snp[["call"]]), "\n", sep = "")
+  cat("\nNumber of observations:", snp[["num.obs"]], "\n")
+  cat("\nNumber of variables:", snp[["num.var"]], "\n")
   cat("\nFirst order indices\n")
 
-  m <- cbind(x[["S"]], x[["bws"]], x[["Sboot"]], x[["bwsboot"]])
+  m <- cbind(snp[["S"]], snp[["bws"]], snp[["Sboot"]], snp[["bwsboot"]])
   colnames(m) <- c("Si CV", "bw CV", "Si Bootstrap", "bw Bootstrap")
-  rownames(m) <- names(x[["S"]])
+  rownames(m) <- names(snp[["S"]])
   print(m, ...)
 }
