@@ -110,9 +110,9 @@ sobolnp <- function(Y,
 
 
 
-  S <- sapply(SList, function(l)
+  S <- vapply(SList, function(l)
     l$S)
-  bws_initial <- sapply(SList, function(l)
+  bws_initial <- vapply(SList, function(l)
     l$bws)
   # ST <- sapply(STotalList, function(l)
   #   l$S)
@@ -128,13 +128,13 @@ sobolnp <- function(Y,
         # bwsT = bwsT_initial
         ))
   } else {
-    meanS <- sapply(SList, function(l)
+    meanS <- vapply(SList, function(l)
       l$mean)
-    sderr <- sapply(SList, function(l)
+    sderr <- vapply(SList, function(l)
       l$sderr)
     # meanres <- sapply(SList, function(l)
     #   l$meanres)
-    error <- sapply(SList, function(l)
+    error <- vapply(SList, function(l)
       l$error)
     # meanT <- sapply(STotalList, function(l)
     #   l$mean)
@@ -208,8 +208,8 @@ sobolnp <- function(Y,
       mc.cores = mc.cores
     )
 
-    Sboot <- sapply(Sfitboot, function(x) x$Sboot)
-    bwsboot <- sapply(Sfitboot, function(x) x$bwsboot)
+    Sboot <- vapply(Sfitboot, function(x) x$Sboot)
+    bwsboot <- vapply(Sfitboot, function(x) x$bwsboot)
   # for (k in 1:p) {
   #     cv_opt <-
   #       minqa::bobyqa(
