@@ -24,7 +24,7 @@
 #' print(estimation)
 #'
 
-print <- function(snp,...){
+print <- function(snp, ...) {
   UseMethod("print", snp)
 }
 
