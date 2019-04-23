@@ -49,8 +49,11 @@ B <- 0.1
 sin(X[, 1]) + A * sin(X[, 2])^2 + B * X[, 3]^4 * sin(X[, 1])
 }
 
-X<- matrix(runif(3*1000, -pi,pi), ncol = 3)
+X<- matrix(runif(3*100, -pi, pi), ncol = 3)
 Y<- ishigami.fun(X)
+
+estimation <- sobolnp(Y = Y, X = X)
+
 }
 \references{
 Solís, Maikol. "Nonparametric estimation of the first order Sobol indices with bootstrap bandwidth." \emph{arXiv preprint arXiv:1803.03333} (2018).
