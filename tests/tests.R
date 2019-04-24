@@ -13,7 +13,7 @@ Y <- ishigami.fun(X)
 ss <- sobolnp::sobolnp(
   Y = Y,
   X = X,
-  nboot = 10,
+  nboot = 2,
   mc.cores = 1
 )
 
