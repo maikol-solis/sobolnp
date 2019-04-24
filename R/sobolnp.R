@@ -39,7 +39,7 @@
 #' X <- matrix(runif(3*100, -pi, pi), ncol = 3)
 #' Y <- ishigami.fun(X)
 #'
-#' estimation <- sobolnp(Y = Y, X = X)
+#' estimation <- sobolnp(Y = Y, X = X, nboot = 5)
 #'
 #' @import np pbmcapply minqa
 #' @importFrom stats residuals var
