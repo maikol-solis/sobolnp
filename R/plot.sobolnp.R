@@ -1,14 +1,21 @@
 #' Plot method for objects \code{sobolnp}
 #'
-#' Plot the Sobol indices based in a non-parametric regression
-#' with cross-validation and bootstrap bandwidth
+#' Bar plot of the first order Sobol indices estimated by
+#' \code{\link{sobolnp}}, with the cross-validation and the bootstrap
+#' bandwidth side by side for each variable.
 #'
-#' @param x an object of class \code{sobolnp}
-#' @param ... further arguments passed to the \code{plot} function
+#' @param x an object of class \code{sobolnp}.
+#' @param ylim limits of the y axis. By default from 0 to the larger of 1 and
+#'   the largest estimated index.
+#' @param xlab,ylab axis labels.
+#' @param col colors for the cross-validation and bootstrap bars.
+#' @param legend.pos position of the legend, passed to
+#'   \code{\link[graphics]{legend}}. Use \code{NULL} to omit it.
+#' @param ... further graphical arguments passed to
+#'   \code{\link[graphics]{barplot}}.
 #'
-#' @return
-#' A formatted table with the results of the \code{\link{sobolnp}}
-#' function.
+#' @return The object \code{x}, invisibly. Called for its side effect of
+#'   drawing a plot.
 #' @export
 #'
 #' @examples
@@ -26,54 +33,43 @@
 #'
 #' plot(estimation)
 #'
-#' @importFrom  graphics plot.default axis legend segments
-plot.sobolnp <- function(x, ...) {
+#' @importFrom graphics barplot legend
+plot.sobolnp <- function(x,
+                         ylim = NULL,
+                         xlab = "Variables",
+                         ylab = "First order Sobol indices",
+                         col = c("#0072B2", "#E69F00"),
+                         legend.pos = "topright",
+                         ...) {
+  indices <- rbind(CV = x[["S"]], Bootstrap = x[["Sboot"]])
+  if (is.null(colnames(indices))) {
+    colnames(indices) <- paste0("X", seq_len(ncol(indices)))
+  }
+  col <- rep_len(col, nrow(indices))
 
-  yrang <- c(0, max(c(x[["Sboot"]], x[["S"]])) + 0.1)
-  xrang <- range(1:x[["num.var"]])
-  dx <- diff(xrang) / (3 * x[["num.var"]])
+  if (is.null(ylim)) {
+    ylim <- c(0, 1.1 * max(1, indices, na.rm = TRUE))
+  }
 
-  xrang[1] <- xrang[1] - dx
-  xrang[2] <- xrang[2] + dx
-
-  graphics::plot.default(
-    x = 1:x[["num.var"]],
-    xlim = xrang,
-    ylim = yrang,
-    xaxt = "n",
-    ylab = "Sobol  indices",
-    xlab = "Variables",
+  barplot(
+    indices,
+    beside = TRUE,
+    col = col,
+    ylim = ylim,
+    xlab = xlab,
+    ylab = ylab,
     ...
   )
 
-  segments(
-    x0 = (1:x[["num.var"]]) - dx,
-    x1 = (1:x[["num.var"]]) + dx,
-    y0 = x[["S"]],
-    lwd = 3,
-    col = "blue"
-  )
+  if (!is.null(legend.pos)) {
+    legend(
+      legend.pos,
+      legend = rownames(indices),
+      fill = col,
+      horiz = TRUE,
+      bty = "n"
+    )
+  }
 
-  segments(
-    x0 = (1:x[["num.var"]]) - dx,
-    x1 = (1:x[["num.var"]]) + dx,
-    y0 = x[["Sboot"]],
-    lwd = 3,
-    col = "red"
-  )
-
-  axis(side = 1,
-       at = 1:x[["num.var"]],
-       labels = names(x[["S"]]))
-
-  legend(
-    "topright",
-    legend = c("CV", "Bootstrap"),
-    lty = 1,
-    lwd = 3,
-    col = c("blue", "red"),
-    horiz = FALSE,
-    bty = "n"
-  )
-
+  invisible(x)
 }

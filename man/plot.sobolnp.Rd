@@ -4,20 +4,40 @@
 \alias{plot.sobolnp}
 \title{Plot method for objects \code{sobolnp}}
 \usage{
-\method{plot}{sobolnp}(x, ...)
+\method{plot}{sobolnp}(
+  x,
+  ylim = NULL,
+  xlab = "Variables",
+  ylab = "First order Sobol indices",
+  col = c("#0072B2", "#E69F00"),
+  legend.pos = "topright",
+  ...
+)
 }
 \arguments{
-\item{x}{an object of class \code{sobolnp}}
+\item{x}{an object of class \code{sobolnp}.}
 
-\item{...}{further arguments passed to the \code{plot} function}
+\item{ylim}{limits of the y axis. By default from 0 to the larger of 1 and
+the largest estimated index.}
+
+\item{xlab, ylab}{axis labels.}
+
+\item{col}{colors for the cross-validation and bootstrap bars.}
+
+\item{legend.pos}{position of the legend, passed to
+\code{\link[graphics]{legend}}. Use \code{NULL} to omit it.}
+
+\item{...}{further graphical arguments passed to
+\code{\link[graphics]{barplot}}.}
 }
 \value{
-A formatted table with the results of the \code{\link{sobolnp}}
-function.
+The object \code{x}, invisibly. Called for its side effect of
+  drawing a plot.
 }
 \description{
-Plot the Sobol indices based in a non-parametric regression
-with cross-validation and bootstrap bandwidth
+Bar plot of the first order Sobol indices estimated by
+\code{\link{sobolnp}}, with the cross-validation and the bootstrap
+bandwidth side by side for each variable.
 }
 \examples{
 
