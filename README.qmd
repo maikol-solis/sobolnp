@@ -31,7 +31,7 @@ input $X_i$,
 
 $$
   S_i
-  = \frac{\operatorname{Var}\left( \mathbb{E}[Y \mid X_i] \right)}{\operatorname{Var}(Y)},
+  = \frac{\mathrm{Var}\left( \mathbb{E}[Y \mid X_i] \right)}{\mathrm{Var}(Y)},
 $$
 
 using only a sample of $(X, Y)$. It does not need to run the model again and
@@ -49,7 +49,7 @@ can no longer run, or when all you have is observational data.
   | Needs to run the model        |                            yes                            |          yes           |           to train it           |                 **no**                  |
   | Needs a designed sample       |                    yes (frozen copies)                    | yes (frequency design) |      yes (training design)      |        **no, any i.i.d. sample**        |
   | Model runs typically needed   |                       $10^4$–$10^5$                       |     $10^3$–$10^4$      |     $10^2$–$10^3$ + fitting     | **the sample you have ($10^2$–$10^3$)** |
-  | Finite-sample bias correction |                             —                             |           —            |    depends on the metamodel     |  **bootstrap reduces the CV bias**      |
+  | Finite-sample bias correction |                             —                             |           —            |    depends on the metamodel     |    **bootstrap reduces the CV bias**    |
 
 sobolnp is a good fit when:
 
@@ -139,10 +139,10 @@ plot(estimation)
 - **Ranking first.** Both estimates usually agree on which inputs matter. This
   is the most reliable output.
 - **CV below, bootstrap closer.** For influential inputs, the CV estimate tends
-  to fall below the true index. In simulations with the default kernel
-  (g-Sobol, Ishigami and an additive model with noise, $n = 300$), the
-  bootstrap estimate reduced that bias and had a lower average error than CV,
-  although on individual samples CV is sometimes closer.
+  to fall below the true index. In simulations with the default kernel (g-Sobol,
+  Ishigami and an additive model with noise, $n = 300$), the bootstrap estimate
+  reduced that bias and had a lower average error than CV, although on
+  individual samples CV is sometimes closer.
 - **Kernel order.** With `ckerorder = 4` the CV estimate is already less biased,
   and the bootstrap correction can overshoot. The default (`ckerorder = 2`) is
   the recommended setting.

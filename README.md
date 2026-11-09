@@ -17,7 +17,7 @@ explained by each input $X_i$,
 
 $$
   S_i
-  = \frac{\operatorname{Var}\left( \mathbb{E}[Y \mid X_i] \right)}{\operatorname{Var}(Y)},
+  = \frac{\mathrm{Var}\left( \mathbb{E}[Y \mid X_i] \right)}{\mathrm{Var}(Y)},
 $$
 
 using only a sample of $(X, Y)$. It does not need to run the model again
