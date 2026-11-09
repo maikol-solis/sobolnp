@@ -18,10 +18,16 @@ sobolnp(
 \arguments{
 \item{Y}{Response continuous variable}
 
-\item{X}{Matrix of independent variables}
+\item{X}{Numeric matrix or data frame of independent variables, with one
+row per element of \code{Y}. Unnamed columns are labelled
+\code{X1, ..., Xp}.}
 
-\item{bandwidth}{If \code{bandwidth.compute = TRUE}, it sets the starting bandwidth to find the bootstrap bandwidth. If \code{NULL} the least-square cross-validation bandwidth is used.
-If \code{bandwidth.compute = FALSE}, it will use the values provided fixed over all the simulation. Defaults to \code{NULL}.}
+\item{bandwidth}{\code{NULL} or a positive numeric vector of length 1 or
+\code{ncol(X)} (one bandwidth per variable). If
+\code{bandwidth.compute = TRUE}, it sets the starting value of the
+least-squares cross-validation search; if \code{NULL} np chooses the
+starting values. If \code{bandwidth.compute = FALSE}, the bandwidths are
+used as given and must be supplied. Defaults to \code{NULL}.}
 
 \item{bandwidth.compute}{Logical value. Indicates if the bandwidth should be estimated or not. Defaults to \code{TRUE}.}
 
@@ -37,6 +43,9 @@ If \code{bandwidth.compute = FALSE}, it will use the values provided fixed over 
 \value{
 A list of class \code{sobolnp} with the following elements:
 \describe{
+  \item{\strong{call}}{The matched call.}
+  \item{\strong{num.obs}, \strong{num.var}}{Number of observations and of
+  input variables.}
   \item{\strong{S}}{First order Sobol indices estimated with nonparametric
   regression and a cross-validation bandwidth}
   \item{\strong{bws}}{Bandwidth estimated with cross-validation}
@@ -44,6 +53,8 @@ A list of class \code{sobolnp} with the following elements:
   nonparametric regression and a bootstrap bandwidth}
   \item{\strong{bwsboot}}{Bandwidth estimated with bootstrap}
 }
+\code{Sboot} and \code{bwsboot} are \code{NULL} when
+\code{bootstrap = FALSE}.
 }
 \description{
 Algorithm to estimate the Sobol indices using a non-parametric
