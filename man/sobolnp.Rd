@@ -4,8 +4,16 @@
 \alias{sobolnp}
 \title{Nonparametric Sobol Estimator with Bootstrap Bandwidth}
 \usage{
-sobolnp(Y, X, bandwidth = NULL, bandwidth.compute = TRUE,
-  bootstrap = TRUE, nboot = 100, ckerorder = 2, mc.cores = 1)
+sobolnp(
+  Y,
+  X,
+  bandwidth = NULL,
+  bandwidth.compute = TRUE,
+  bootstrap = TRUE,
+  nboot = 100,
+  ckerorder = 2,
+  mc.cores = 1
+)
 }
 \arguments{
 \item{Y}{Response continuous variable}

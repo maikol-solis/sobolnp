@@ -1,11 +1,12 @@
 #' Print method for objects \code{sobolnp}
 #'
-#' @param snp an object of class \code{sobolnp}
-#' @param ... further arguments passed to the \code{print} function
+#' @param x an object of class \code{sobolnp}.
+#' @param digits minimal number of significant digits, see
+#'   \code{\link{print.default}}.
+#' @param ... further arguments passed to \code{\link{print.default}}.
 #'
-#' @return
-#' A formatted table with the results of the \code{\link{sobolnp}}
-#' function.
+#' @return The object \code{x}, invisibly. Called for its side effect of
+#'   printing the estimated indices and bandwidths.
 #' @export
 #'
 #' @examples
@@ -23,21 +24,15 @@
 #'
 #' print(estimation)
 #'
-
-print <- function(snp, ...) {
-  UseMethod("print", snp)
-}
-
-#' @export
-#' @rdname print
-print.sobolnp <- function(snp, ...) {
-  cat("\nCall:\n", deparse(snp[["call"]]), "\n", sep = "")
-  cat("\nNumber of observations:", snp[["num.obs"]], "\n")
-  cat("\nNumber of variables:", snp[["num.var"]], "\n")
+print.sobolnp <- function(x, digits = max(3L, getOption("digits") - 3L), ...) {
+  cat("\nCall:\n", paste(deparse(x[["call"]]), collapse = "\n"), "\n", sep = "")
+  cat("\nNumber of observations:", x[["num.obs"]], "\n")
+  cat("Number of variables:", x[["num.var"]], "\n")
   cat("\nFirst order indices\n")
 
-  m <- cbind(snp[["S"]], snp[["bws"]], snp[["Sboot"]], snp[["bwsboot"]])
-  colnames(m) <- c("Si CV", "bw CV", "Si Bootstrap", "bw Bootstrap")
-  rownames(m) <- names(snp[["S"]])
-  print(m, ...)
+  m <- cbind(x[["S"]], x[["bws"]], x[["Sboot"]], x[["bwsboot"]])
+  colnames(m) <- c("Si CV", "bw CV", "Si Bootstrap", "bw Bootstrap")[seq_len(ncol(m))]
+  rownames(m) <- names(x[["S"]])
+  print.default(m, digits = digits, ...)
+  invisible(x)
 }
