@@ -39,7 +39,7 @@
 #' \code{bootstrap = FALSE}.
 #' @references
 #'
-#'Solís, Maikol. "Nonparametric estimation of the first order Sobol indices with bootstrap bandwidth." \emph{arXiv preprint arXiv:1803.03333} (2018).
+#' Solís, M. (2021). Non-parametric estimation of the first-order Sobol indices with bootstrap bandwidth. \emph{Communications in Statistics - Simulation and Computation}, 50(9), 2497-2512. \doi{10.1080/03610918.2019.1655575}
 #'
 #' @export
 #' @examples

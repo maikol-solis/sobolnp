@@ -1,10 +1,15 @@
 Package: sobolnp
 Type: Package
 Title: Nonparametric Sobol Estimator with Bootstrap Bandwidth
-Version: 0.1.0
-Author: Maikol Solís <maikol.solis@ucr.ac.cr>
-Maintainer: Maikol Solís <maikol.solis@ucr.ac.cr>
-Description: Algorithm to estimate the Sobol indices using a non-parametric fit of the regression curve. The bandwidth is estimated using bootstrap to reduce the finite-sample bias. The package is based on the paper Solís, M. (2018) <arXiv:1803.03333>.   
+Version: 0.2.0
+Authors@R: person(given = "Maikol",
+                  family = "Solís",
+                  role = c("aut", "cre"),
+                  email = "maikol.solis@ucr.ac.cr")
+Description: Algorithm to estimate the Sobol indices using a non-parametric
+    fit of the regression curve. The bandwidth is estimated using bootstrap
+    to reduce the finite-sample bias. The package is based on the paper
+    Solís, M. (2021) <doi:10.1080/03610918.2019.1655575>.
 License: MIT + file LICENSE
 URL: https://github.com/maikol-solis/sobolnp/
 BugReports: https://github.com/maikol-solis/sobolnp/issues
@@ -12,5 +17,4 @@ Imports: np, minqa, parallel, pbmcapply
 Suggests: testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Encoding: UTF-8
-LazyData: true
 Config/roxygen2/version: 8.1.1
