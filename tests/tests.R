@@ -20,3 +20,7 @@ ss <- sobolnp::sobolnp(
 print(ss)
 
 plot(ss)
+
+# Two input variables (previously failed in the residual bootstrap)
+ss2 <- sobolnp::sobolnp(Y = Y, X = X[, 1:2], nboot = 2, mc.cores = 1)
+stopifnot(length(ss2$Sboot) == 2)

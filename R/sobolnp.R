@@ -143,16 +143,15 @@ sobolnp <- function(Y,
     # errorT <- sapply(STotalList, function(l)
     #   l$error)
 
-    Y_boot <- mapply(
-      FUN = function(n) {
-        #browser()
-        idx <-
-          matrix(sample(1:n, size = n * p, replace = TRUE), nrow = n)
-        return(meanS + sderr * error[idx])
-      },
-      rep(n, nboot),
-      SIMPLIFY = FALSE
-    )
+    # Resample the standardized residuals of each variable independently.
+    Y_boot <- replicate(nboot, {
+      error_boot <- vapply(
+        seq_len(p),
+        function(k) error[sample.int(n, n, replace = TRUE), k],
+        numeric(n)
+      )
+      meanS + sderr * error_boot
+    }, simplify = FALSE)
 
     # Y_bootT <- mapply(
     #   FUN = function(n) {
