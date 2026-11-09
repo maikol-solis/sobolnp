@@ -18,6 +18,15 @@ test_that("sobolnp returns a well-formed object", {
   }
   expect_true(all(fit$S >= 0 & fit$Sboot >= 0))
   expect_true(all(fit$bws > 0 & fit$bwsboot > 0))
+  expect_true(all(fit$bwsboot <= fit$bws * (1 + 1e-8)))
+})
+
+test_that("bootstrap results are reproducible with set.seed", {
+  set.seed(1)
+  a <- sobolnp(Y = Y, X = X, nboot = 2, verbose = FALSE)
+  set.seed(1)
+  b <- sobolnp(Y = Y, X = X, nboot = 2, verbose = FALSE)
+  expect_identical(a$Sboot, b$Sboot)
 })
 
 test_that("two input variables work (residual bootstrap indexing)", {

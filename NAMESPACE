@@ -7,7 +7,6 @@ importFrom(graphics,
   barplot,
   legend
 )
-importFrom(minqa,bobyqa)
 importFrom(np,
   npreg,
   npregbw
@@ -15,6 +14,7 @@ importFrom(np,
 importFrom(parallel,mclapply)
 importFrom(pbmcapply,pbmclapply)
 importFrom(stats,
+  optimize,
   residuals,
   var
 )

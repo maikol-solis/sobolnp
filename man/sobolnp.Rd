@@ -65,6 +65,21 @@ Algorithm to estimate the Sobol indices using a non-parametric
 fit of the regression curve. The bandwidth is estimated using
 bootstrap to reduce the finite-sample bias.
 }
+\details{
+For each input \eqn{X_i}, the regression curve \eqn{E[Y | X_i]} is
+estimated by kernel regression with a least-squares cross-validation (CV)
+bandwidth, and \code{S} is the variance of the fitted curve divided by the
+variance of \code{Y}.
+
+With \code{bootstrap = TRUE}, the residuals of the CV fit are standardized
+with a kernel estimate of their scale and resampled to build \code{nboot}
+bootstrap responses. For a bandwidth \eqn{h}, the bootstrap curves give a
+bias-corrected curve \eqn{2 \hat m_{CV} - \bar m^*_h} and a bootstrap
+index. The bootstrap bandwidth \code{bwsboot} minimizes the mean squared
+distance between the bootstrap indices and \code{S}, searching between
+\code{bws / 1000} and \code{bws}, and \code{Sboot} is the mean bootstrap
+index at that bandwidth.
+}
 \examples{
 ishigami.fun <- function(X) {
 A <- 7
