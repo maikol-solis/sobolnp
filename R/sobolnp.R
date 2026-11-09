@@ -299,7 +299,8 @@ compute.sobol.indices <-
         ckerorder = ckerorder,
         bwmethod = "cv.ls"
       ),
-      residuals = TRUE
+      residuals = TRUE,
+      se = !only.mean
     )
     g <- ghat$mean
     if (only.mean) {
