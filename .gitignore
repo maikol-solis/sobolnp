@@ -36,3 +36,4 @@ vignettes/*.pdf
 
 /.quarto/
 **/*.quarto_ipynb
+*.Rproj
