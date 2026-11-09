@@ -8,7 +8,7 @@ Description: Algorithm to estimate the Sobol indices using a non-parametric fit 
 License: MIT + file LICENSE
 URL: https://github.com/maikol-solis/sobolnp/
 BugReports: https://github.com/maikol-solis/sobolnp/issues
-Imports: np, minqa, pbmcapply
+Imports: np, minqa, parallel, pbmcapply
 Encoding: UTF-8
 LazyData: true
 Config/roxygen2/version: 8.1.1

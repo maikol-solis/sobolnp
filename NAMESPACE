@@ -10,6 +10,7 @@ importFrom(graphics,
   barplot,
   legend
 )
+importFrom(parallel,mclapply)
 importFrom(stats,
   residuals,
   var

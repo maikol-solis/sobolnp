@@ -12,7 +12,8 @@ sobolnp(
   bootstrap = TRUE,
   nboot = 100,
   ckerorder = 2,
-  mc.cores = 1
+  mc.cores = 1,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -39,6 +40,9 @@ used as given and must be supplied. Defaults to \code{NULL}.}
 \code{(2,4,6,8)}). Defaults to \code{2}.}
 
 \item{mc.cores}{Number of cores used. Defaults to \code{1}.}
+
+\item{verbose}{Logical value. If \code{TRUE} (default), report progress
+messages and progress bars.}
 }
 \value{
 A list of class \code{sobolnp} with the following elements:

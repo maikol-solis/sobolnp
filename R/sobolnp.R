@@ -20,6 +20,8 @@
 #' @param ckerorder Numeric value specifying kernel order (should be one of
 #' \code{(2,4,6,8)}). Defaults to \code{2}.
 #' @param mc.cores Number of cores used. Defaults to \code{1}.
+#' @param verbose Logical value. If \code{TRUE} (default), report progress
+#'   messages and progress bars.
 #'
 #' @return A list of class \code{sobolnp} with the following elements:
 #' \describe{
@@ -54,6 +56,7 @@
 #'
 #' @import np pbmcapply minqa
 #' @importFrom stats residuals var
+#' @importFrom parallel mclapply
 
 sobolnp <- function(Y,
                     X,
@@ -62,7 +65,8 @@ sobolnp <- function(Y,
                     bootstrap = TRUE,
                     nboot = 100,
                     ckerorder = 2,
-                    mc.cores = 1){
+                    mc.cores = 1,
+                    verbose = TRUE){
   if (is.data.frame(X)) {
     X <- as.matrix(X)
   }
@@ -104,12 +108,17 @@ sobolnp <- function(Y,
          call. = FALSE)
   }
 
+  old_options <- options(np.messages = verbose)
+  on.exit(options(old_options), add = TRUE)
+  lapply_cores <- if (verbose) pbmclapply else mclapply
+  say <- function(...) if (verbose) message(...)
+
   output <- list(call = match.call(),
                  num.obs = n,
                  num.var = p)
 
-  message("Estimating non-parametric Sobol indices with cross-validation bandwidth")
-  SList <- pbmclapply(
+  say("Estimating non-parametric Sobol indices with cross-validation bandwidth")
+  SList <- lapply_cores(
     X = 1:p,
     FUN = function(k) {
       compute.sobol.indices(
@@ -150,8 +159,8 @@ sobolnp <- function(Y,
       meanS + sderr * error_boot
     }, simplify = FALSE)
 
-    message("Estimating non-parametric Sobol indices with bootstrap bandwidth")
-    Sfitboot <-   pbmclapply(
+    say("Estimating non-parametric Sobol indices with bootstrap bandwidth")
+    Sfitboot <- lapply_cores(
       X = 1:p,
       FUN = function(k) {
         cv_opt <-
@@ -216,8 +225,8 @@ compute.sobol.indices <-
     )
     g <- ghat$mean
     if (only.mean) {
-      return(mean = g)
-    } else{
+      return(g)
+    } else {
       bws <- ghat$bw
 
       res <- residuals(ghat)
@@ -245,15 +254,12 @@ BLS <-
            var.index,
            ckerorder) {
 
-    if (any(bws < 0) | any(is.na(bws))) {
+    if (anyNA(bws) || any(bws <= 0)) {
       return(10e10)
     }
 
-    mean_boot <-  sapply(ydat_boot, function(yboot,
-                                             xdat,
-                                             bws,
-                                             ckerorder) {
-      g <- compute.sobol.indices(
+    mean_boot <- vapply(ydat_boot, function(yboot) {
+      compute.sobol.indices(
         xdat = xdat,
         ydat = yboot[, var.index],
         bws = bws,
@@ -261,12 +267,7 @@ BLS <-
         ckerorder = ckerorder,
         only.mean = TRUE
       )
-      return(g)
-    },
-    xdat = xdat,
-    bws = bws,
-    ckerorder)
+    }, numeric(length(ydat)))
 
-    return(mean(abs(ydat - rowMeans(mean_boot))))
-
+    mean(abs(ydat - rowMeans(mean_boot)))
   }

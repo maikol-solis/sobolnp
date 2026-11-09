@@ -42,3 +42,14 @@ stopifnot(inherits(try(sobolnp::sobolnp(Y = Y[-1], X = X), silent = TRUE),
                    "try-error"))
 stopifnot(inherits(try(sobolnp::sobolnp(Y = Y, X = X, bandwidth = -1),
                        silent = TRUE), "try-error"))
+
+# verbose = FALSE is silent
+msgs <- character()
+withCallingHandlers(
+  sobolnp::sobolnp(Y = Y, X = X, nboot = 2, verbose = FALSE),
+  message = function(m) {
+    msgs <<- c(msgs, conditionMessage(m))
+    invokeRestart("muffleMessage")
+  }
+)
+stopifnot(length(msgs) == 0)
