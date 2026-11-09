@@ -3,14 +3,17 @@
 S3method(plot,sobolnp)
 S3method(print,sobolnp)
 export(sobolnp)
-import(minqa)
-import(np)
-import(pbmcapply)
 importFrom(graphics,
   barplot,
   legend
 )
+importFrom(minqa,bobyqa)
+importFrom(np,
+  npreg,
+  npregbw
+)
 importFrom(parallel,mclapply)
+importFrom(pbmcapply,pbmclapply)
 importFrom(stats,
   residuals,
   var

@@ -54,7 +54,9 @@
 #'
 #' estimation <- sobolnp(Y = Y, X = X, nboot = 5)
 #'
-#' @import np pbmcapply minqa
+#' @importFrom np npreg npregbw
+#' @importFrom pbmcapply pbmclapply
+#' @importFrom minqa bobyqa
 #' @importFrom stats residuals var
 #' @importFrom parallel mclapply
 
